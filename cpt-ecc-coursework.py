@@ -50,20 +50,38 @@ def decimalToVector(n,r):
 
 #################################################################################
 
+import numpy as np
+
+# Functions for Hamming codes
+
 def message(a):
-	r = 2
-	while 2**(r) -2*r -1 < len(a):
-		r += 1
-	k = 2**(r) -r -1
-	print("k", k)
-	print("r", r)
-	out = []
-	
-	out += (decimalToVector(len(a), r))
-	out += a
-	while len(out) < k:
-		out.append(0)
-	return out	
+    r = 2
+    while 2**(r) -2*r -1 < len(a):
+        r += 1
+    k = 2**(r) -r -1
+    print("k", k)
+    print("r", r)
+    out = []
+    
+    out += (decimalToVector(len(a), r))
+    out += a
+    while len(out) < k:
+        out.append(0)
+    return out
+
+def hammingEncoder(m):
+    r = 2
+    while len(m) > 2**r-r-1:
+        r += 1
+    if len(m) < 2**r-r-1:
+        return []
+    m = np.array(m)
+    hamming = hammingGeneratorMatrix(r)
+    out = m.dot(hamming)
+    out = out.tolist()
+    return out
+
+    
 
 
 
@@ -75,6 +93,7 @@ def message(a):
 
 def repetitionEncoder(m,n):
     return m*n
+
 
 
 def reperitionDecoder(v):
