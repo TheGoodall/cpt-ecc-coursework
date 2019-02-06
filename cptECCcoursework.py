@@ -60,6 +60,7 @@ def vectorToDecimal(v):
 #################################################################################
 
 import numpy as np
+import math
 
 # Functions for Hamming codes
 
@@ -68,8 +69,6 @@ def message(a):
     while 2**(r) -2*r -1 < len(a):
         r += 1
     k = 2**(r) -r -1
-    print("k", k)
-    print("r", r)
     out = []
     
     out += (decimalToVector(len(a), r))
@@ -104,31 +103,50 @@ def hammingDecoder(v):
     v=np.array(v)
     Htranspose = np.array(Htranspose)
 
+    
     errorpos = v.dot(Htranspose)
     errorpos = np.mod(errorpos, np.full_like(errorpos, 2))
 
-    if errorpos.all(0):
+    if not errorpos.any():
         return v.tolist()
     errorpos_decimal = vectorToDecimal(errorpos.tolist())-1
 
     v = v.tolist()
-    v[errorpos_decimal] = (errorpos_decimal+1)%2
-    
+    v[errorpos_decimal] = (v[errorpos_decimal]+1)%2
+
     return v
 
-
     
-print(hammingDecoder([0, 1, 1, 0, 0, 0, 0]))
+
     
 
 
 def messageFromCodeword(c):
-    return []
+    r = 2
+    while len(c) > 2**r-1:
+        r += 1
+    if len(c) < 2**r-1:
+        return []
+    output = []
+    for i,n in enumerate(c):
+        if not math.isclose(math.log2(i+1)%1, 0):
+            output.append(n)
+    return output
+
 
 def dataFromMessage(m):
-    return []
+    r = 2
+    while len(m) > 2**r-r-1:
+        r += 1
+    if len(m) < 2**r-r-1:
+        return []
+    length = vectorToDecimal(m[:r])
 
-    
+    if len(m) - r < length:
+        return []
+    message = m[r:r+length]
+    return message
+
 
 
 
