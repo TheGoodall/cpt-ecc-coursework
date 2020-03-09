@@ -145,7 +145,14 @@ def dataFromMessage(m):
     if len(m) - r < length:
         return []
     message = m[r:r+length]
-    return message
+    allzeros = True
+    for digit in m[r+length:len(m)]:
+        if digit == 1:
+            allzeros = False
+    if allzeros:
+        return message
+    else:
+        return []
 
 
 
@@ -157,7 +164,11 @@ def dataFromMessage(m):
 # Functions for repetition codes
 
 def repetitionEncoder(m,n):
-    return m*n
+    if m == list(m):
+        if len(m) == 1 and n == int(n):
+            if n >= 0:
+                return m*n
+    return []
 
 
 
